@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface CrimeReportRepository extends JpaRepository<CrimeReport, Long> {
 
-    @Query("""
-        SELECT c FROM CrimeReport c
-        WHERE c.latitude BETWEEN :latMin AND :latMax
-          AND c.longitude BETWEEN :lngMin AND :lngMax
-    """)
+    @Query(
+        "SELECT c FROM CrimeReport c " +
+        "WHERE c.latitude BETWEEN :latMin AND :latMax " +
+        "AND c.longitude BETWEEN :lngMin AND :lngMax"
+    )
     List<CrimeReport> findByLatLongRange(
             @Param("latMin") double latMin,
             @Param("latMax") double latMax,
@@ -21,4 +21,3 @@ public interface CrimeReportRepository extends JpaRepository<CrimeReport, Long> 
             @Param("lngMax") double lngMax
     );
 }
-az
