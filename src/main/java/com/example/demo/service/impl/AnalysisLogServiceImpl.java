@@ -5,6 +5,7 @@ import com.example.demo.model.HotspotZone;
 import com.example.demo.repository.AnalysisLogRepository;
 import com.example.demo.repository.HotspotZoneRepository;
 import com.example.demo.service.AnalysisLogService;
+import java.util.List;
 
 public class AnalysisLogServiceImpl implements AnalysisLogService {
 
