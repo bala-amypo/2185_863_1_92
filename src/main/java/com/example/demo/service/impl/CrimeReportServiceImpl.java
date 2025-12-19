@@ -7,7 +7,9 @@ import com.example.demo.util.CoordinateValidator;
 import com.example.demo.util.DateValidator;
 
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CrimeReportServiceImpl implements CrimeReportService {
 
     private final CrimeReportRepository crimeReportRepository;
