@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service   // 🔥 THIS WAS MISSING
+@Service   
 public class AnalysisLogService {
 
     private final AnalysisLogRepository repository;

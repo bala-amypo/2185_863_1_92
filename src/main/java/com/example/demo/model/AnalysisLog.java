@@ -31,6 +31,6 @@ public class AnalysisLog {
 
     public LocalDateTime getLoggedAt() { return loggedAt; }
 
-    public HotspotZone getZone() { return zone; }
-    public void setZone(HotspotZone zone) { this.zone = zone; }
+    public HotspotZone getZoneId() { return zone; }
+    public void setZoneId(HotspotZone zone) { this.zone = zone; }
 }
