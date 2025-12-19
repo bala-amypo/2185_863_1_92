@@ -6,23 +6,23 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service   
-public class AnalysisLogService {
+// @Service   
+// public class AnalysisLogService {
 
-    private final AnalysisLogRepository repository;
+//     private final AnalysisLogRepository repository;
 
-    public AnalysisLogService(AnalysisLogRepository repository) {
-        this.repository = repository;
-    }
+//     public AnalysisLogService(AnalysisLogRepository repository) {
+//         this.repository = repository;
+//     }
 
-    public AnalysisLog addLog(Long zoneId, String message) {
-        AnalysisLog log = new AnalysisLog();
-        log.setZoneId(zoneId);
-        log.setMessage(message);
-        return repository.save(log);
-    }
+//     public AnalysisLog addLog(Long zoneId, String message) {
+//         AnalysisLog log = new AnalysisLog();
+//         log.setZoneId(zoneId);
+//         log.setMessage(message);
+//         return repository.save(log);
+//     }
 
-    public List<AnalysisLog> getLogsByZone(Long zoneId) {
-        return repository.findByZoneId(zoneId);
-    }
-}
+//     public List<AnalysisLog> getLogsByZone(Long zoneId) {
+//         return repository.findByZoneId(zoneId);
+//     }
+// }

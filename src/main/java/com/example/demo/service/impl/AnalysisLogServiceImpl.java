@@ -7,6 +7,9 @@ import com.example.demo.repository.HotspotZoneRepository;
 import com.example.demo.service.AnalysisLogService;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class AnalysisLogServiceImpl implements AnalysisLogService {
 
     private final AnalysisLogRepository logRepository;
