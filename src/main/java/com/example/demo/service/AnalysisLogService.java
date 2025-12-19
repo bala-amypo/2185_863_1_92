@@ -26,3 +26,8 @@ import java.util.List;
 //         return repository.findByZoneId(zoneId);
 //     }
 // }
+
+public interface AnalysisLogService {
+    public AnalysisLog addLog(Long zoneId, String message);
+    public List<AnalysisLog> getLogsByZone(Long zoneId);
+}
