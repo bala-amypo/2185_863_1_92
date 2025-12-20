@@ -5,13 +5,11 @@ import com.example.demo.repository.CrimeReportRepository;
 import com.example.demo.service.CrimeReportService;
 import com.example.demo.util.CoordinateValidator;
 import com.example.demo.util.DateValidator;
-
-import java.util.List;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class CrimeReportServiceImpl implements CrimeReportService {
-
     private final CrimeReportRepository crimeReportRepository;
 
     public CrimeReportServiceImpl(CrimeReportRepository crimeReportRepository) {
@@ -19,15 +17,15 @@ public class CrimeReportServiceImpl implements CrimeReportService {
     }
 
     @Override
-    public CrimeReport addReport(CrimeReport report) {
+    public CrimeReport addReport(CrimeReport report) throws Exception {
         if (!CoordinateValidator.isValidLatitude(report.getLatitude())) {
-            throw new RuntimeException("Invalid latitude");
+            throw new Exception("Invalid latitude");
         }
         if (!CoordinateValidator.isValidLongitude(report.getLongitude())) {
-            throw new RuntimeException("Invalid longitude");
+            throw new Exception("Invalid longitude");
         }
-        if (!DateValidator.isPastOrPresent(report.getOccurredAt())) {
-            throw new RuntimeException("Date not valid");
+        if (!DateValidator.isNotFuture(report.getOccurredAt())) {
+            throw new Exception("Date cannot be in future");
         }
         return crimeReportRepository.save(report);
     }

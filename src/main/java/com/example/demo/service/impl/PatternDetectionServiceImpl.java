@@ -3,24 +3,21 @@ package com.example.demo.service.impl;
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.PatternDetectionService;
-
+import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.stereotype.Service;
 
 @Service
 public class PatternDetectionServiceImpl implements PatternDetectionService {
-
     private final HotspotZoneRepository zoneRepository;
     private final CrimeReportRepository crimeRepository;
     private final PatternDetectionResultRepository resultRepository;
     private final AnalysisLogRepository logRepository;
 
-    public PatternDetectionServiceImpl(
-            HotspotZoneRepository zoneRepository,
-            CrimeReportRepository crimeRepository,
-            PatternDetectionResultRepository resultRepository,
-            AnalysisLogRepository logRepository) {
+    public PatternDetectionServiceImpl(HotspotZoneRepository zoneRepository,
+                                      CrimeReportRepository crimeRepository,
+                                      PatternDetectionResultRepository resultRepository,
+                                      AnalysisLogRepository logRepository) {
         this.zoneRepository = zoneRepository;
         this.crimeRepository = crimeRepository;
         this.resultRepository = resultRepository;
@@ -28,43 +25,31 @@ public class PatternDetectionServiceImpl implements PatternDetectionService {
     }
 
     @Override
-    public PatternDetectionResult detectPattern(Long zoneId) {
+    public PatternDetectionResult detectPattern(Long zoneId) throws Exception {
         HotspotZone zone = zoneRepository.findById(zoneId)
-                .orElseThrow(() -> new RuntimeException("Zone not found"));
+            .orElseThrow(() -> new Exception("Zone not found"));
 
-        double lat = zone.getCenterLat();
-        double lng = zone.getCenterLong();
+        double minLat = zone.getCenterLat() - 0.1;
+        double maxLat = zone.getCenterLat() + 0.1;
+        double minLong = zone.getCenterLong() - 0.1;
+        double maxLong = zone.getCenterLong() + 0.1;
 
-        List<CrimeReport> crimes = crimeRepository.findByLatLongRange(
-                lat - 0.1, lat + 0.1, lng - 0.1, lng + 0.1
-        );
-
+        List<CrimeReport> crimes = crimeRepository.findByLatLongRange(minLat, maxLat, minLong, maxLong);
         int count = crimes.size();
-        String pattern;
 
+        String pattern;
         if (count > 5) {
-            pattern = "High crime activity detected";
-            zone.setSeverityLevel("HIGH");
+            pattern = "High Risk Pattern Detected";
         } else if (count > 0) {
-            pattern = "Medium crime activity detected";
-            zone.setSeverityLevel("MEDIUM");
+            pattern = "Medium Risk Pattern Detected";
         } else {
-            pattern = "No crime detected";
-            zone.setSeverityLevel("LOW");
+            pattern = "No Pattern Detected";
         }
 
-        PatternDetectionResult result = new PatternDetectionResult();
-        result.setZone(zone);
-        result.setCrimeCount(count);
-        result.setDetectedPattern(pattern);
-        result.setAnalysisDate(LocalDate.now());
+        PatternDetectionResult result = new PatternDetectionResult(zone, LocalDate.now(), count, pattern);
+        result = resultRepository.save(result);
 
-        zoneRepository.save(zone);
-        resultRepository.save(result);
-
-        AnalysisLog log = new AnalysisLog();
-        log.setZone(zone);
-        log.setMessage("Pattern detection executed");
+        AnalysisLog log = new AnalysisLog("Pattern detection completed", null, zone);
         logRepository.save(log);
 
         return result;
