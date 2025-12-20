@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+import java.util.List;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
@@ -17,9 +18,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/{email}")
-    @Operation(summary = "Find user by email")
-    public User getUserByEmail(@PathVariable String email) {
-        return userService.findByEmail(email);
+  @GetMapping("/users")
+public List<User> getUsers() {
+    try {
+        return userService.getUsers();
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Failed to fetch users");
     }
+}
+
 }
