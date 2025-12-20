@@ -1,11 +1,10 @@
-package com.example.demo.service.impl;
+package com.example.demo.service;
 
-import java.util.List;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
-import com.example.demo.util.PasswordUtil;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,19 +17,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) throws Exception {
-        // Your registration logic here
-        user.setPassword(PasswordUtil.hashPassword(user.getPassword()));
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new Exception("Email already exists");
+        }
         return userRepository.save(user);
     }
 
     @Override
     public User findByEmail(String email) throws Exception {
         return userRepository.findByEmail(email)
-            .orElseThrow(() -> new Exception("User not found with email: " + email));
+                .orElseThrow(() -> new Exception("User not found"));
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> getUsers() {   // ✅ REQUIRED
         return userRepository.findAll();
     }
 }

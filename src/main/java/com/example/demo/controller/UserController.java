@@ -1,15 +1,13 @@
 package com.example.demo.controller;
-import java.util.List;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-@Tag(name = "Users")
 public class UserController {
 
     private final UserService userService;
@@ -18,14 +16,13 @@ public class UserController {
         this.userService = userService;
     }
 
-  @GetMapping("/users")
-public List<User> getUsers() {
-    try {
-        return userService.getUsers();
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw new RuntimeException("Failed to fetch users");
+    @PostMapping("/register")
+    public User register(@RequestBody User user) throws Exception {
+        return userService.register(user);
     }
-}
 
+    @GetMapping
+    public List<User> getUsers() {
+        return userService.getUsers();
+    }
 }
