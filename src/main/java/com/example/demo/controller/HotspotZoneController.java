@@ -2,17 +2,15 @@ package com.example.demo.controller;
 
 import com.example.demo.model.HotspotZone;
 import com.example.demo.service.HotspotZoneService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/zones")
 @Tag(name = "Hotspot Zones")
 public class HotspotZoneController {
-
     private final HotspotZoneService hotspotZoneService;
 
     public HotspotZoneController(HotspotZoneService hotspotZoneService) {
@@ -20,14 +18,17 @@ public class HotspotZoneController {
     }
 
     @PostMapping
-    @Operation(summary = "Create hotspot zone")
-    public HotspotZone createZone(@RequestBody HotspotZone zone) {
-        return hotspotZoneService.addZone(zone);
+    public ResponseEntity<?> addZone(@RequestBody HotspotZone zone) {
+        try {
+            HotspotZone saved = hotspotZoneService.addZone(zone);
+            return ResponseEntity.status(201).body(saved);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping
-    @Operation(summary = "List all hotspot zones")
-    public List<HotspotZone> getAllZones() {
-        return hotspotZoneService.getAllZones();
+    public ResponseEntity<List<HotspotZone>> getAllZones() {
+        return ResponseEntity.ok(hotspotZoneService.getAllZones());
     }
 }

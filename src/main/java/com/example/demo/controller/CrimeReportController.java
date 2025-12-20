@@ -2,17 +2,15 @@ package com.example.demo.controller;
 
 import com.example.demo.model.CrimeReport;
 import com.example.demo.service.CrimeReportService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/reports")
 @Tag(name = "Crime Reports")
 public class CrimeReportController {
-
     private final CrimeReportService crimeReportService;
 
     public CrimeReportController(CrimeReportService crimeReportService) {
@@ -20,14 +18,17 @@ public class CrimeReportController {
     }
 
     @PostMapping
-    @Operation(summary = "Add new crime report")
-    public CrimeReport addReport(@RequestBody CrimeReport report) {
-        return crimeReportService.addReport(report);
+    public ResponseEntity<?> addReport(@RequestBody CrimeReport report) {
+        try {
+            CrimeReport saved = crimeReportService.addReport(report);
+            return ResponseEntity.status(201).body(saved);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping
-    @Operation(summary = "Fetch all crime reports")
-    public List<CrimeReport> getAllReports() {
-        return crimeReportService.getAllReports();
+    public ResponseEntity<List<CrimeReport>> getAllReports() {
+        return ResponseEntity.ok(crimeReportService.getAllReports());
     }
 }
