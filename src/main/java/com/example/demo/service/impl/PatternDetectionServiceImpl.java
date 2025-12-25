@@ -3,10 +3,12 @@ package com.example.demo.service.impl;
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.PatternDetectionService;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Service
 public class PatternDetectionServiceImpl implements PatternDetectionService {
 
     private final HotspotZoneRepository zoneRepo;
@@ -39,18 +41,7 @@ public class PatternDetectionServiceImpl implements PatternDetectionService {
                 reportRepo.findByLatLongRange(minLat, maxLat, minLong, maxLong);
 
         int count = crimes.size();
-        String pattern;
-
-        if (count > 5) {
-            pattern = "High";
-            zone.setSeverityLevel("High");
-        } else if (count > 0) {
-            pattern = "Medium";
-            zone.setSeverityLevel("Medium");
-        } else {
-            pattern = "No";
-            zone.setSeverityLevel("No");
-        }
+        String pattern = count > 5 ? "High" : count > 0 ? "Medium" : "No";
 
         PatternDetectionResult result = new PatternDetectionResult();
         result.setZone(zone);
@@ -64,6 +55,7 @@ public class PatternDetectionServiceImpl implements PatternDetectionService {
         log.setMessage("Pattern detected");
         logRepo.save(log);
 
+        zone.setSeverityLevel(pattern);
         zoneRepo.save(zone);
 
         return result;
