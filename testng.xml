@@ -1,0 +1,10 @@
+cat > src/test/resources/testng.xml << 'EOF'
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="PortalSuite">
+    <test name="AllTests">
+        <packages>
+            <package name="com.example.demo"/>
+        </packages>
+    </test>
+</suite>
+EOF
