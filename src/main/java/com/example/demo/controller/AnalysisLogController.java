@@ -2,35 +2,29 @@ package com.example.demo.controller;
 
 import com.example.demo.model.AnalysisLog;
 import com.example.demo.service.AnalysisLogService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/logs")
-@Tag(name = "Analysis Logs")
 public class AnalysisLogController {
-    private final AnalysisLogService analysisLogService;
 
-    public AnalysisLogController(AnalysisLogService analysisLogService) {
-        this.analysisLogService = analysisLogService;
+    private final AnalysisLogService service;
+
+    public AnalysisLogController(AnalysisLogService service) {
+        this.service = service;
     }
 
     @PostMapping("/{zoneId}")
-    public ResponseEntity<?> addLog(@PathVariable Long zoneId, @RequestBody Map<String, String> body) {
-        try {
-            String message = body.get("message");
-            AnalysisLog log = analysisLogService.addLog(zoneId, message);
-            return ResponseEntity.status(201).body(log);
-        } catch (Exception e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+    public AnalysisLog addLog(
+            @PathVariable Long zoneId,
+            @RequestBody String message) {
+        return service.addLog(zoneId, message);
     }
 
     @GetMapping("/zone/{zoneId}")
-    public ResponseEntity<List<AnalysisLog>> getLogsByZone(@PathVariable Long zoneId) {
-        return ResponseEntity.ok(analysisLogService.getLogsByZone(zoneId));
+    public List<AnalysisLog> getLogs(@PathVariable Long zoneId) {
+        return service.getLogsByZone(zoneId);
     }
 }

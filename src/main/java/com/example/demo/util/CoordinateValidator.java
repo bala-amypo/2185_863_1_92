@@ -1,15 +1,16 @@
 package com.example.demo.util;
 
 public class CoordinateValidator {
-    public static boolean isValidLatitude(Double lat) {
-        return lat != null && lat >= -90 && lat <= 90;
+
+    public static boolean isValidLatitude(Double latitude) {
+        return latitude != null && latitude >= -90 && latitude <= 90;
     }
 
-    public static boolean isValidLongitude(Double lon) {
-        return lon != null && lon >= -180 && lon <= 180;
+    public static boolean isValidLongitude(Double longitude) {
+        return longitude != null && longitude >= -180 && longitude <= 180;
     }
 
-    public static boolean isValidCoordinates(Double lat, Double lon) {
-        return isValidLatitude(lat) && isValidLongitude(lon);
+    public static boolean isValidCoordinates(Double latitude, Double longitude) {
+        return isValidLatitude(latitude) && isValidLongitude(longitude);
     }
 }
