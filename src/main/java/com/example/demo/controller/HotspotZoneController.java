@@ -2,33 +2,27 @@ package com.example.demo.controller;
 
 import com.example.demo.model.HotspotZone;
 import com.example.demo.service.HotspotZoneService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/zones")
-@Tag(name = "Hotspot Zones")
 public class HotspotZoneController {
-    private final HotspotZoneService hotspotZoneService;
 
-    public HotspotZoneController(HotspotZoneService hotspotZoneService) {
-        this.hotspotZoneService = hotspotZoneService;
+    private final HotspotZoneService service;
+
+    public HotspotZoneController(HotspotZoneService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<?> addZone(@RequestBody HotspotZone zone) {
-        try {
-            HotspotZone saved = hotspotZoneService.addZone(zone);
-            return ResponseEntity.status(201).body(saved);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public HotspotZone addZone(@RequestBody HotspotZone zone) {
+        return service.addZone(zone);
     }
 
     @GetMapping
-    public ResponseEntity<List<HotspotZone>> getAllZones() {
-        return ResponseEntity.ok(hotspotZoneService.getAllZones());
+    public List<HotspotZone> getAll() {
+        return service.getAllZones();
     }
 }
