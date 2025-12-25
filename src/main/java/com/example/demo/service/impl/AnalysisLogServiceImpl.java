@@ -5,26 +5,27 @@ import com.example.demo.model.HotspotZone;
 import com.example.demo.repository.AnalysisLogRepository;
 import com.example.demo.repository.HotspotZoneRepository;
 import com.example.demo.service.AnalysisLogService;
+import com.example.demo.exception.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service   // 🔥 THIS IS THE FIX
 public class AnalysisLogServiceImpl implements AnalysisLogService {
 
     private final AnalysisLogRepository logRepo;
     private final HotspotZoneRepository zoneRepo;
 
-    public AnalysisLogServiceImpl(
-            AnalysisLogRepository logRepo,
-            HotspotZoneRepository zoneRepo) {
+    public AnalysisLogServiceImpl(AnalysisLogRepository logRepo,
+                                  HotspotZoneRepository zoneRepo) {
         this.logRepo = logRepo;
         this.zoneRepo = zoneRepo;
     }
 
     @Override
     public AnalysisLog addLog(Long zoneId, String message) {
-
         HotspotZone zone = zoneRepo.findById(zoneId)
-                .orElseThrow(() -> new RuntimeException("zone"));
+                .orElseThrow(() -> new ResourceNotFoundException("zone not found"));
 
         AnalysisLog log = new AnalysisLog(message, zone);
         return logRepo.save(log);
