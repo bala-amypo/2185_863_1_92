@@ -1,25 +1,48 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "pattern_detection_results")
 public class PatternDetectionResult {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "zone_id")
     private HotspotZone zone;
 
     private LocalDate analysisDate;
+
+    @NotNull
+    @Min(0)
     private Integer crimeCount;
+
+    @NotBlank
     private String detectedPattern;
 
     public PatternDetectionResult() {}
 
+    public PatternDetectionResult(HotspotZone zone, LocalDate analysisDate, Integer crimeCount, String detectedPattern) {
+        this.zone = zone;
+        this.analysisDate = analysisDate;
+        this.crimeCount = crimeCount;
+        this.detectedPattern = detectedPattern;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (analysisDate == null) {
+            analysisDate = LocalDate.now();
+        }
+    }
+
+    // Getters and Setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public HotspotZone getZone() { return zone; }
     public void setZone(HotspotZone zone) { this.zone = zone; }

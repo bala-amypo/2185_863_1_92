@@ -1,24 +1,46 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "crime_reports")
 public class CrimeReport {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(max = 100)
     private String crimeType;
+
+    @NotBlank
+    @Size(max = 500)
     private String description;
+
+    @NotNull
     private Double latitude;
+
+    @NotNull
     private Double longitude;
+
+    @NotNull
     private LocalDateTime occurredAt;
 
     public CrimeReport() {}
 
+    public CrimeReport(String crimeType, String description, Double latitude, Double longitude, LocalDateTime occurredAt) {
+        this.crimeType = crimeType;
+        this.description = description;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.occurredAt = occurredAt;
+    }
+
+    // Getters and Setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getCrimeType() { return crimeType; }
     public void setCrimeType(String crimeType) { this.crimeType = crimeType; }

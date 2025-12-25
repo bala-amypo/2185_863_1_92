@@ -4,6 +4,6 @@ import com.example.demo.model.AnalysisLog;
 import java.util.List;
 
 public interface AnalysisLogService {
-    AnalysisLog addLog(Long zoneId, String message);
+    AnalysisLog addLog(Long zoneId, String message) throws Exception;
     List<AnalysisLog> getLogsByZone(Long zoneId);
 }
