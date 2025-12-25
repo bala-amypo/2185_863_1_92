@@ -9,29 +9,32 @@ import java.util.List;
 
 @Service
 public class HotspotZoneServiceImpl implements HotspotZoneService {
+    private final HotspotZoneRepository zoneRepository;
 
-    private final HotspotZoneRepository repo;
-
-    public HotspotZoneServiceImpl(HotspotZoneRepository repo) {
-        this.repo = repo;
+    public HotspotZoneServiceImpl(HotspotZoneRepository zoneRepository) {
+        this.zoneRepository = zoneRepository;
     }
 
     @Override
-    public HotspotZone addZone(HotspotZone zone) {
-        if (repo.existsByZoneName(zone.getZoneName())) {
-            throw new IllegalArgumentException("exists");
+    public HotspotZone addZone(HotspotZone zone) throws Exception {
+        // Check for duplicate zone name
+        if (zoneRepository.existsByZoneName(zone.getZoneName())) {
+            throw new IllegalArgumentException("Zone name already exists");
         }
-        if (zone.getCenterLat() < -90 || zone.getCenterLat() > 90) {
-            throw new IllegalArgumentException("latitude");
+        
+        // Validate coordinates
+        if (zone.getCenterLat() == null || zone.getCenterLat() < -90 || zone.getCenterLat() > 90) {
+            throw new IllegalArgumentException("Invalid latitude - must be between -90 and 90");
         }
-        if (zone.getCenterLong() < -180 || zone.getCenterLong() > 180) {
-            throw new IllegalArgumentException("longitude");
+        if (zone.getCenterLong() == null || zone.getCenterLong() < -180 || zone.getCenterLong() > 180) {
+            throw new IllegalArgumentException("Invalid longitude - must be between -180 and 180");
         }
-        return repo.save(zone);
+        
+        return zoneRepository.save(zone);
     }
 
     @Override
     public List<HotspotZone> getAllZones() {
-        return repo.findAll();
+        return zoneRepository.findAll();
     }
 }

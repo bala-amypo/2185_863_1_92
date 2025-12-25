@@ -10,37 +10,32 @@ import java.util.List;
 
 @Service
 public class CrimeReportServiceImpl implements CrimeReportService {
+    private final CrimeReportRepository reportRepository;
 
-    private final CrimeReportRepository repo;
-
-    public CrimeReportServiceImpl(CrimeReportRepository repo) {
-        this.repo = repo;
+    public CrimeReportServiceImpl(CrimeReportRepository reportRepository) {
+        this.reportRepository = reportRepository;
     }
 
     @Override
-    public CrimeReport addReport(CrimeReport report) {
-        if (report.getLatitude() == null ||
-            report.getLatitude() < -90 ||
-            report.getLatitude() > 90) {
-            throw new IllegalArgumentException("latitude");
+    public CrimeReport addReport(CrimeReport report) throws Exception {
+        // Validate coordinates
+        if (report.getLatitude() == null || report.getLatitude() < -90 || report.getLatitude() > 90) {
+            throw new IllegalArgumentException("Invalid latitude - must be between -90 and 90");
         }
-
-        if (report.getLongitude() == null ||
-            report.getLongitude() < -180 ||
-            report.getLongitude() > 180) {
-            throw new IllegalArgumentException("longitude");
+        if (report.getLongitude() == null || report.getLongitude() < -180 || report.getLongitude() > 180) {
+            throw new IllegalArgumentException("Invalid longitude - must be between -180 and 180");
         }
-
-        if (report.getOccurredAt() != null &&
-            report.getOccurredAt().isAfter(LocalDateTime.now())) {
-            throw new IllegalArgumentException("time");
+        
+        // Validate time
+        if (report.getOccurredAt() != null && report.getOccurredAt().isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Crime occurrence time cannot be in the future");
         }
-
-        return repo.save(report);
+        
+        return reportRepository.save(report);
     }
 
     @Override
     public List<CrimeReport> getAllReports() {
-        return repo.findAll();
+        return reportRepository.findAll();
     }
 }
