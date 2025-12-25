@@ -84,6 +84,9 @@ public class PatternDetectionServiceImpl implements PatternDetectionService {
 
     @Override
     public List<PatternDetectionResult> getResultsByZone(Long zoneId) {
+        if (zoneId == null) {
+            throw new IllegalArgumentException("Zone ID cannot be null");
+        }
         return resultRepo.findByZone_Id(zoneId);
     }
 }
