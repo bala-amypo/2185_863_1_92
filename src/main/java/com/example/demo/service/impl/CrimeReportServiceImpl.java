@@ -3,35 +3,42 @@ package com.example.demo.service.impl;
 import com.example.demo.model.CrimeReport;
 import com.example.demo.repository.CrimeReportRepository;
 import com.example.demo.service.CrimeReportService;
-import com.example.demo.util.CoordinateValidator;
-import com.example.demo.util.DateValidator;
-import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
-@Service
 public class CrimeReportServiceImpl implements CrimeReportService {
-    private final CrimeReportRepository crimeReportRepository;
 
-    public CrimeReportServiceImpl(CrimeReportRepository crimeReportRepository) {
-        this.crimeReportRepository = crimeReportRepository;
+    private final CrimeReportRepository repo;
+
+    public CrimeReportServiceImpl(CrimeReportRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public CrimeReport addReport(CrimeReport report) throws Exception {
-        if (!CoordinateValidator.isValidLatitude(report.getLatitude())) {
-            throw new Exception("Invalid latitude");
+    public CrimeReport addReport(CrimeReport report) {
+        if (report.getLatitude() == null ||
+            report.getLatitude() < -90 ||
+            report.getLatitude() > 90) {
+            throw new IllegalArgumentException("latitude");
         }
-        if (!CoordinateValidator.isValidLongitude(report.getLongitude())) {
-            throw new Exception("Invalid longitude");
+
+        if (report.getLongitude() == null ||
+            report.getLongitude() < -180 ||
+            report.getLongitude() > 180) {
+            throw new IllegalArgumentException("longitude");
         }
-        if (!DateValidator.isNotFuture(report.getOccurredAt())) {
-            throw new Exception("Date cannot be in future");
+
+        if (report.getOccurredAt() != null &&
+            report.getOccurredAt().isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("time");
         }
-        return crimeReportRepository.save(report);
+
+        return repo.save(report);
     }
 
     @Override
     public List<CrimeReport> getAllReports() {
-        return crimeReportRepository.findAll();
+        return repo.findAll();
     }
 }
