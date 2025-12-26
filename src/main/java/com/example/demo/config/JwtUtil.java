@@ -26,7 +26,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Claims pareToken(String token) {
+    public Claims parseToken(String token) {  // Fixed: changed "pareToken" to "parseToken"
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
