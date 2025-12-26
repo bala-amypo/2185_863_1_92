@@ -4,35 +4,38 @@ import com.example.demo.model.CrimeReport;
 import com.example.demo.repository.CrimeReportRepository;
 import com.example.demo.service.CrimeReportService;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Service   // 🔥 REQUIRED
+@Service
 public class CrimeReportServiceImpl implements CrimeReportService {
 
-    private final CrimeReportRepository repo;
+    private final CrimeReportRepository reportRepository;
 
-    public CrimeReportServiceImpl(CrimeReportRepository repo) {
-        this.repo = repo;
+    public CrimeReportServiceImpl(CrimeReportRepository reportRepository) {
+        this.reportRepository = reportRepository;
     }
 
     @Override
     public CrimeReport addReport(CrimeReport report) {
-        if (report.getLatitude() == null || report.getLatitude() < -90 || report.getLatitude() > 90) {
+
+        if (report.getLatitude() < -90 || report.getLatitude() > 90) {
             throw new IllegalArgumentException("latitude invalid");
         }
-        if (report.getLongitude() == null || report.getLongitude() < -180 || report.getLongitude() > 180) {
+
+        if (report.getLongitude() < -180 || report.getLongitude() > 180) {
             throw new IllegalArgumentException("longitude invalid");
         }
-        if (report.getOccurredAt() != null && report.getOccurredAt().isAfter(LocalDateTime.now())) {
-            throw new IllegalArgumentException("time invalid");
+
+        if (report.getOccurredAt().isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("occurred time cannot be future");
         }
-        return repo.save(report);
+
+        return reportRepository.save(report);
     }
 
     @Override
     public List<CrimeReport> getAllReports() {
-        return repo.findAll();
+        return reportRepository.findAll();
     }
 }

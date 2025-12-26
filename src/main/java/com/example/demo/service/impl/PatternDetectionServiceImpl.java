@@ -3,13 +3,13 @@ package com.example.demo.service.impl;
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.PatternDetectionService;
-import com.example.demo.exception.ResourceNotFoundException;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import com.example.demo.exception.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
 
-@Service   // 🔥 REQUIRED
+@Service
 public class PatternDetectionServiceImpl implements PatternDetectionService {
 
     private final HotspotZoneRepository zoneRepo;
@@ -46,32 +46,33 @@ public class PatternDetectionServiceImpl implements PatternDetectionService {
         int count = crimes.size();
 
         String pattern;
-        String severity;
-
         if (count > 5) {
             pattern = "High Risk Pattern Detected";
-            severity = "HIGH";
+            zone.setSeverityLevel("HIGH");
         } else if (count > 0) {
             pattern = "Medium Risk Pattern Detected";
-            severity = "MEDIUM";
+            zone.setSeverityLevel("MEDIUM");
         } else {
             pattern = "No Pattern Detected";
-            severity = "LOW";
+            zone.setSeverityLevel("LOW");
         }
 
-        PatternDetectionResult result = new PatternDetectionResult();
-        result.setZone(zone);
-        result.setCrimeCount(count);
-        result.setDetectedPattern(pattern);
-        result.setAnalysisDate(LocalDate.now());
+        PatternDetectionResult result = new PatternDetectionResult(
+                zone,
+                LocalDate.now(),
+                count,
+                pattern
+        );
 
         resultRepo.save(result);
 
-        zone.setSeverityLevel(severity);
-        zoneRepo.save(zone);
+        AnalysisLog log = new AnalysisLog(
+                "Pattern detection completed",
+                zone
+        );
 
-        AnalysisLog log = new AnalysisLog("Pattern detection completed", zone);
         logRepo.save(log);
+        zoneRepo.save(zone);
 
         return result;
     }
