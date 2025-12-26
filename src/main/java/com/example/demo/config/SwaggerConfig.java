@@ -22,9 +22,9 @@ public class SwaggerConfig {
                         .description("Crime analysis and hotspot detection system"))
                 .servers(List.of(
                         // Local for testing
-                        new Server().url("http://localhost:9002"),
+                        new Server().url("http://localhost:9001"),
                         // Portal deployment URL
-                        new Server().url("https://9195.pro604cr.amypo.ai/")
+                        new Server().url("https://9195.32procr.amypo.ai/")
                 ))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new io.swagger.v3.oas.models.Components()
