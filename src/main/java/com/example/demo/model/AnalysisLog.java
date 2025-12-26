@@ -12,12 +12,13 @@ public class AnalysisLog {
     private Long id;
 
     private String message;
+
     private LocalDateTime loggedAt;
 
     @ManyToOne
+    @JoinColumn(name = "zone_id")
     private HotspotZone zone;
 
-    // FIX: Add timestamp initialization in default constructor
     public AnalysisLog() {
         this.loggedAt = LocalDateTime.now();
     }
@@ -29,21 +30,37 @@ public class AnalysisLog {
     }
 
     @PrePersist
-    public void onCreate() {
-        if (this.loggedAt == null) {
-            this.loggedAt = LocalDateTime.now();
-        }
+    protected void onCreate() {
+        this.loggedAt = LocalDateTime.now();
     }
 
-    // getters & setters
+    // Getters and Setters
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getMessage() { return message; }
-    public void setMessage(String message) { this.message = message; }
+    public String getMessage() {
+        return message;
+    }
 
-    public LocalDateTime getLoggedAt() { return loggedAt; }
+    public LocalDateTime getLoggedAt() {
+        return loggedAt;
+    }
 
-    public HotspotZone getZone() { return zone; }
-    public void setZone(HotspotZone zone) { this.zone = zone; }
+    public HotspotZone getZone() {
+        return zone;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setZone(HotspotZone zone) {
+        this.zone = zone;
+    }
 }
