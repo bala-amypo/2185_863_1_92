@@ -22,11 +22,14 @@ public class AnalysisLog {
     public AnalysisLog(String message, HotspotZone zone) {
         this.message = message;
         this.zone = zone;
+        this.loggedAt = LocalDateTime.now();  // Set timestamp in constructor
     }
 
     @PrePersist
     public void onCreate() {
-        this.loggedAt = LocalDateTime.now();
+        if (this.loggedAt == null) {  // Only set if not already set
+            this.loggedAt = LocalDateTime.now();
+        }
     }
 
     // getters & setters
