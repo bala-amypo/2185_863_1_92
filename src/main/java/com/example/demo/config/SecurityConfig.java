@@ -28,7 +28,28 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                // Allow public access to Swagger/OpenAPI endpoints
+                .requestMatchers(
+                    "/auth/**",
+                    // Swagger UI endpoints
+                    "/swagger-ui.html",
+                    "/swagger-ui/**",
+                    "/swagger-ui/index.html",
+                    // OpenAPI documentation endpoints
+                    "/v3/api-docs/**",
+                    "/api-docs/**",
+                    "/v3/api-docs",
+                    "/api-docs",
+                    // Swagger resources
+                    "/swagger-resources/**",
+                    "/swagger-resources",
+                    "/configuration/ui",
+                    "/configuration/security",
+                    "/webjars/**",
+                    // Other common endpoints
+                    "/error",
+                    "/favicon.ico"
+                ).permitAll()
                 .anyRequest().authenticated()
             );
         
