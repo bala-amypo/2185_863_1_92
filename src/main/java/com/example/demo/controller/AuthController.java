@@ -1,22 +1,27 @@
 package com.example.demo.controller;
 
 import com.example.demo.config.JwtUtil;
+import com.example.demo.dto.AuthRequest;
+import com.example.demo.dto.AuthResponse;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
     private final UserService userService;
-    private final JwtUtil jwtUtil = new JwtUtil();
+    private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService,
+                          JwtUtil jwtUtil,
+                          PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/register")
@@ -25,19 +30,25 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody User user) {
-        User dbUser = userService.findByEmail(user.getEmail());
+    public AuthResponse login(@RequestBody AuthRequest request) {
+
+        User user = userService.findByEmail(request.getEmail());
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("invalid credentials");
+        }
 
         String token = jwtUtil.generateToken(
-                dbUser.getId(),
-                dbUser.getEmail(),
-                dbUser.getRole()
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
         );
 
-        Map<String, Object> res = new HashMap<>();
-        res.put("token", token);
-        res.put("email", dbUser.getEmail());
-        res.put("role", dbUser.getRole());
-        return res;
+        return new AuthResponse(
+                token,
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+        );
     }
 }
