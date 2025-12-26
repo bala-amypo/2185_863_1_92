@@ -17,17 +17,20 @@ public class AnalysisLog {
     @ManyToOne
     private HotspotZone zone;
 
-    public AnalysisLog() {}
+    // FIX: Add timestamp initialization in default constructor
+    public AnalysisLog() {
+        this.loggedAt = LocalDateTime.now();
+    }
 
     public AnalysisLog(String message, HotspotZone zone) {
         this.message = message;
         this.zone = zone;
-        this.loggedAt = LocalDateTime.now();  // Set timestamp in constructor
+        this.loggedAt = LocalDateTime.now();
     }
 
     @PrePersist
     public void onCreate() {
-        if (this.loggedAt == null) {  // Only set if not already set
+        if (this.loggedAt == null) {
             this.loggedAt = LocalDateTime.now();
         }
     }
