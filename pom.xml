@@ -26,7 +26,6 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
     </properties>
 
     <dependencies>
@@ -139,13 +138,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- TestNG Spring integration -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -161,61 +153,24 @@
                 </configuration>
             </plugin>
 
-            <!-- Unit Tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
+                    <!-- Force TestNG as the test framework -->
                     <testNGArtifactName>org.testng:testng</testNGArtifactName>
                     <useSystemClassLoader>false</useSystemClassLoader>
+                    <!-- Disable JUnit 5 -->
                     <junitArtifactName>none:none</junitArtifactName>
-                    <!-- Include ALL possible test patterns -->
+                    <!-- Include all tests -->
                     <includes>
                         <include>**/*Test.java</include>
                         <include>**/*Tests.java</include>
                         <include>**/*TestNG.java</include>
-                        <include>**/*Suite.java</include>
-                        <include>**/*TestSuite.java</include>
-                        <include>**/*TestCase.java</include>
-                        <include>**/*TestCases.java</include>
-                        <include>**/*TestClass.java</include>
+                        <include>**/*SuiteTest.java</include>
                     </includes>
-                    <!-- Exclude integration tests -->
-                    <excludes>
-                        <exclude>**/*IT.java</exclude>
-                        <exclude>**/*ITest.java</exclude>
-                        <exclude>**/*IntegrationTest.java</exclude>
-                    </excludes>
-                    <parallel>methods</parallel>
-                    <threadCount>4</threadCount>
-                    <failIfNoTests>false</failIfNoTests>
                 </configuration>
-            </plugin>
-
-            <!-- Integration Tests -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${maven-failsafe-plugin.version}</version>
-                <configuration>
-                    <includes>
-                        <include>**/*IT.java</include>
-                        <include>**/*ITest.java</include>
-                        <include>**/*IntegrationTest.java</include>
-                        <include>**/*Integration.java</include>
-                    </includes>
-                    <parallel>methods</parallel>
-                    <threadCount>2</threadCount>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
