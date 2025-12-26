@@ -11,7 +11,7 @@ public class SwaggerConfig{
 public OpenAPI crimeHotspotOpenAPI () {
 return new OpenAPI()
 // You need to change the port as per your server
-.servers(List.of( new Server().url("https://9195.32procr.amypo.ai/")
+.servers(List.of( new Server().url("https://9046.pro604cr.amypo.ai/")
 ));
 }
 }
