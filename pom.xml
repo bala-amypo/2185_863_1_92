@@ -76,6 +76,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- SWAGGER - ADDED -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+
         <!-- TestNG (Primary testing framework) -->
         <dependency>
             <groupId>org.testng</groupId>
@@ -170,6 +177,9 @@
                         <include>**/*TestNG.java</include>
                         <include>**/*SuiteTest.java</include>
                     </includes>
+                    <!-- Ensure tests run -->
+                    <skipTests>false</skipTests>
+                    <testFailureIgnore>false</testFailureIgnore>
                 </configuration>
             </plugin>
 
