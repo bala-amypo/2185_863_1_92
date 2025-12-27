@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-Table@(name = "crime_reports")
+@Table(name = "crime_reports")
 public class CrimeReport {
 
     @Id
@@ -34,10 +34,12 @@ public class CrimeReport {
         this.occurredAt = occurredAt;
     }
 
-    // Getters and Setters
-
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCrimeType() {
@@ -46,10 +48,6 @@ public class CrimeReport {
 
     public void setCrimeType(String crimeType) {
         this.crimeType = crimeType;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getDescription() {
