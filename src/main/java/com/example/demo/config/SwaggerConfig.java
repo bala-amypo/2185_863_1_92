@@ -1,17 +1,66 @@
 package com.example.demo.config;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import java.util.List;
+
 @Configuration
-public class SwaggerConfig{
-@Bean
-public OpenAPI crimeHotspotOpenAPI () {
-return new OpenAPI()
-// You need to change the port as per your server
-.servers(List.of( new Server().url("https://9195.32procr.amypo.ai/")
-));
-}
+public class SwaggerConfig {
+    
+    @Bean
+    public OpenAPI crimeHotspotOpenAPI() {
+        // Define the security scheme name
+        final String securitySchemeName = "basicAuth";
+        
+        return new OpenAPI()
+            .servers(List.of(
+                new Server().url("https://9195.32procr.amypo.ai/").description("Production Server"),
+                new Server().url("http://localhost:9001").description("Local Development")
+            ))
+            .info(new Info()
+                .title("Crime Hotspot Pattern Detector API")
+                .description("""
+                    ### API Documentation for Crime Hotspot Pattern Detector
+                    
+                    This API provides endpoints for:
+                    - User management and authentication
+                    - Crime hotspot detection and analysis
+                    - Zone management and pattern analysis
+                    
+                    ### Authentication
+                    This API uses HTTP Basic Authentication.
+                    **Username:** admin
+                    **Password:** admin123
+                    
+                    For testing protected endpoints, click the "Authorize" button above and enter credentials.
+                    """)
+                .version("1.0.0")
+                .contact(new Contact()
+                    .name("API Support")
+                    .email("support@example.com"))
+                .license(new License()
+                    .name("Apache 2.0")
+                    .url("http://springdoc.org")))
+            // Add global security requirement
+            .addSecurityItem(new SecurityRequirement()
+                .addList(securitySchemeName))
+            // Define the security scheme
+            .components(new Components()
+                .addSecuritySchemes(securitySchemeName,
+                    new SecurityScheme()
+                        .name(securitySchemeName)
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme("basic")
+                        .description("HTTP Basic Authentication")
+                        .bearerFormat("JWT")));
+    }
 }
