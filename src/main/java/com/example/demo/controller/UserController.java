@@ -1,34 +1,56 @@
-package com.example.demo.controllers;
+package com.example.demo.controller;
 
-import com.example.demo.model.User;
-import com.example.demo.service.UserService;
-import jakarta.validation.Valid;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/auth")
 public class UserController {
 
-    private final UserService service;
+    private final AuthenticationManager authenticationManager;
 
-    public UserController(UserService service) {
-        this.service = service;
+    public AuthController(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
     }
 
-    @PostMapping
-    public User create(@Valid @RequestBody User user) {  // Add @Valid here
-        return service.saveUser(user);
+    @PostMapping("/login")
+    public Map<String, Object> login(@RequestBody LoginRequest request) {
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.username(), request.password())
+        );
+        
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        
+        return Map.of(
+            "message", "Login successful",
+            "username", request.username(),
+            "authenticated", true,
+            "role", authentication.getAuthorities().toString()
+        );
     }
 
-    @GetMapping
-    public List<User> getAll() {
-        return service.getAllUsers();
+    @GetMapping("/logout")
+    public Map<String, String> logout() {
+        SecurityContextHolder.clearContext();
+        return Map.of("message", "Logout successful");
     }
 
-    @GetMapping("/{id}")
-    public User getById(@PathVariable Long id) {
-        return service.getUserById(id);
+    @GetMapping("/me")
+    public Map<String, Object> getCurrentUser(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            return Map.of(
+                "username", authentication.getName(),
+                "authorities", authentication.getAuthorities().toString(),
+                "authenticated", true
+            );
+        }
+        return Map.of("authenticated", false);
     }
+
+    record LoginRequest(String username, String password) {}
 }
