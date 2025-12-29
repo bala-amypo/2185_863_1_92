@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,11 +14,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name is required")
+    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
     private String name;
 
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
     @Column(nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
     private String role;
@@ -42,8 +49,6 @@ public class User {
             this.role = "ANALYST";
         }
     }
-
-    
 
     public Long getId() {
         return id;
